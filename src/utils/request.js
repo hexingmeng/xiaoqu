@@ -32,28 +32,16 @@ service.interceptors.request.use(
 
 // response interceptor
 service.interceptors.response.use(
-  /**
-   * If you want to get http information such as headers or status
-   * Please return  response => response
-  */
-
-  /**
-   * Determine the request status by custom code
-   * Here is just an example
-   * You can also judge the status by HTTP Status Code
-   */
   response => {
     const res = response.data
 
-    // if the custom code is not 20000, it is judged as an error.
-    if (res.code !== 20000) {
+    if (res.code !== 200) {
       Message({
         message: res.message || 'Error',
         type: 'error',
         duration: 5 * 1000
       })
 
-      // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
       if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
         // to re-login
         MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
@@ -70,6 +58,7 @@ service.interceptors.response.use(
     } else {
       return res
     }
+    
   },
   error => {
     console.log('err' + error) // for debug
